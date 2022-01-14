@@ -13,4 +13,31 @@
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
 
+    <repositories>
+
+    </repositories>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.squareup.okhttp</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>2.7.5</version>
+        </dependency>
+
+        <dependency>
+        <groupId>org.json</groupId>
+        <artifactId>json</artifactId>
+        <version>20211205</version>
+        </dependency>
+
+        <dependency>
+            <groupId>rome</groupId>
+            <artifactId>rome</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+
+    </dependencies>
+
 </project>
