@@ -1,10 +1,13 @@
 package de.jaaaaanobert.main.rssreader;
 
+import com.sun.syndication.feed.synd.SyndEntryImpl;
 import com.sun.syndication.io.FeedException;
-import de.jaaaaanobert.main.index.IndexGUID;
+import de.jaaaaanobert.main.filter.RSSFilter;
+import de.jaaaaanobert.main.http.Webhook;
+import de.jaaaaanobert.main.index.ReadIndex;
+import de.jaaaaanobert.main.index.WriteIndex;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GetNewEntries {
@@ -14,18 +17,28 @@ public class GetNewEntries {
         try {
             ReadRSSFeed feed = new ReadRSSFeed( feedURL );
 
-            List<String> remoteguid = feed.getGUID();
+            List<SyndEntryImpl> remoteEntry = feed.getFeedEntrys();
 
-            for ( String s : remoteguid ) {
-                if ( !guid.contains( s ) ) {
-                    guid.add( s );
-                    new IndexGUID().writeIndex( s, instanceName );
-                    System.out.println(guid + " is new!");
+            new ReadIndex( instanceName );
+
+            Boolean newItems = false;
+
+            for ( SyndEntryImpl s : remoteEntry ) {
+                if ( !ReadIndex.guid.contains( s.getUri() ) ) {
+                    ReadIndex.guid.add( s.getUri() );
+                    new WriteIndex().writeIndex( s.getUri(), instanceName );
+
+                    if ( instanceName.equals( "Dortmund" ) && new RSSFilter().titleFilter( s.getTitle(), "Verkehr:" ) ) {
+                        new Webhook().sendPost( s, instanceName );
+                    } else new Webhook().sendPost( s, instanceName );
+                    System.out.println( s.getUri() + " is new!" );
+                    newItems = true;
                 }
             }
 
-
-            feed.getGUID();
+            if ( !newItems ) {
+                System.out.println( "No new Items!" );
+            }
         } catch ( IOException e ) {
             e.printStackTrace();
         } catch ( FeedException e ) {
