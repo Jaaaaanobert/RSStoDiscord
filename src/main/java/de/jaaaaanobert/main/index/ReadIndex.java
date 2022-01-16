@@ -4,7 +4,6 @@ package de.jaaaaanobert.main.index;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ReadIndex {
 
@@ -13,7 +12,7 @@ public class ReadIndex {
 
         ArrayList<String> guid = new ArrayList<>();
 
-        new File( instance + ".index" ).createNewFile();
+        new File( instance + ".index" );
         BufferedReader bf = new BufferedReader(
                 new InputStreamReader( new FileInputStream( instance + ".index" ), StandardCharsets.UTF_8 ) );
         String input;

@@ -4,7 +4,6 @@ import com.sun.syndication.feed.synd.SyndEntryImpl;
 import com.sun.syndication.io.FeedException;
 import de.jaaaaanobert.main.filter.RSSFilter;
 import de.jaaaaanobert.main.http.Webhook;
-import de.jaaaaanobert.main.index.ReadIndex;
 import de.jaaaaanobert.main.index.WriteIndex;
 
 import java.io.IOException;
@@ -19,8 +18,6 @@ public class GetNewEntries {
             ReadRSSFeed feed = new ReadRSSFeed( feedURL );
 
             List<SyndEntryImpl> remoteEntry = feed.getFeedEntrys();
-
-            ArrayList<String> guidFile = new ReadIndex().readFile( instanceName );
 
             boolean newItems = false;
 
