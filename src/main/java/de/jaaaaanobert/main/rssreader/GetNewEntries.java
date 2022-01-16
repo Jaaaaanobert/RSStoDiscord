@@ -13,7 +13,7 @@ import java.util.List;
 
 public class GetNewEntries {
 
-    public void sync( String instanceName, String feedURL ) {
+    public void sync( String instanceName, String feedURL, ArrayList<String> guidList ) {
 
         try {
             ReadRSSFeed feed = new ReadRSSFeed( feedURL );
@@ -25,10 +25,9 @@ public class GetNewEntries {
             boolean newItems = false;
 
             for ( SyndEntryImpl s : remoteEntry ) {
-                if ( !guidFile.contains( s.getUri() ) ) {
-                    guidFile.add( s.getUri() );
+                if ( !guidList.contains( s.getUri() ) ) {
+                    guidList.add( s.getUri() );
                     new WriteIndex().writeIndex( s.getUri(), instanceName );
-
                     if ( instanceName.equals( "Dortmund" ) && new RSSFilter().titleFilter( s.getTitle(), "Verkehr:" ) ) {
                         new Webhook().sendPost( s, instanceName );
                     } else if ( !instanceName.equals( "Dortmund" ) )
@@ -40,7 +39,7 @@ public class GetNewEntries {
             }
 
             if ( !newItems ) {
-                System.out.println( "No new Items in instance! " + instanceName );
+                System.out.println( "No new Items in instance " + instanceName );
             }
         } catch ( IOException | FeedException e ) {
             e.printStackTrace();
