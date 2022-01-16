@@ -12,7 +12,7 @@ public class ReadIndex {
 
         ArrayList<String> guid = new ArrayList<>();
 
-        new File( instance + ".index" );
+        new File( instance + ".index" ).createNewFile();
         BufferedReader bf = new BufferedReader(
                 new InputStreamReader( new FileInputStream( instance + ".index" ), StandardCharsets.UTF_8 ) );
         String input;

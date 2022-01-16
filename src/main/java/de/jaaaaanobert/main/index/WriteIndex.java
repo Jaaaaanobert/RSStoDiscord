@@ -7,6 +7,7 @@ public class WriteIndex {
 
 
     public void writeIndex( String guid, String instance ) throws IOException {
+        File file = new File( instance + ".index" );
         FileOutputStream fos = new FileOutputStream( instance + ".index", true );
         fos.write( ( guid + "\n" ).getBytes( StandardCharsets.UTF_8 ) );
         fos.close();
