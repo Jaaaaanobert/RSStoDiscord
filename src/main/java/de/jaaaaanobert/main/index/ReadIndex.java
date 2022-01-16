@@ -1,28 +1,27 @@
 package de.jaaaaanobert.main.index;
 
-import javafx.scene.shape.Path;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.List;
 
 public class ReadIndex {
 
-    public static ArrayList<String> guid = new ArrayList<>();
 
-    public ReadIndex( String instance ) throws IOException {
+    public ArrayList<String> readFile( String instance ) throws IOException {
+
+        ArrayList<String> guid = new ArrayList<>();
+
         new File( instance + ".index" ).createNewFile();
-
-
-        BufferedReader bf = new BufferedReader( new InputStreamReader( new FileInputStream( instance + ".index" ), StandardCharsets.UTF_8 ) );
-
-        String input = null;
-
+        BufferedReader bf = new BufferedReader(
+                new InputStreamReader( new FileInputStream( instance + ".index" ), StandardCharsets.UTF_8 ) );
+        String input;
         while ( ( input = bf.readLine() ) != null ) {
-          guid.add( input );
+            guid.add( input );
         }
 
+        return guid;
     }
+
 }

@@ -8,6 +8,7 @@ import de.jaaaaanobert.main.index.ReadIndex;
 import de.jaaaaanobert.main.index.WriteIndex;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GetNewEntries {
@@ -19,29 +20,29 @@ public class GetNewEntries {
 
             List<SyndEntryImpl> remoteEntry = feed.getFeedEntrys();
 
-            new ReadIndex( instanceName );
+            ArrayList<String> guidFile = new ReadIndex().readFile( instanceName );
 
-            Boolean newItems = false;
+            boolean newItems = false;
 
             for ( SyndEntryImpl s : remoteEntry ) {
-                if ( !ReadIndex.guid.contains( s.getUri() ) ) {
-                    ReadIndex.guid.add( s.getUri() );
+                if ( !guidFile.contains( s.getUri() ) ) {
+                    guidFile.add( s.getUri() );
                     new WriteIndex().writeIndex( s.getUri(), instanceName );
 
                     if ( instanceName.equals( "Dortmund" ) && new RSSFilter().titleFilter( s.getTitle(), "Verkehr:" ) ) {
                         new Webhook().sendPost( s, instanceName );
-                    } else new Webhook().sendPost( s, instanceName );
+                    } else if ( !instanceName.equals( "Dortmund" ) )
+                        new Webhook().sendPost( s, instanceName );
+
                     System.out.println( s.getUri() + " is new!" );
                     newItems = true;
                 }
             }
 
             if ( !newItems ) {
-                System.out.println( "No new Items!" );
+                System.out.println( "No new Items in instance! " + instanceName );
             }
-        } catch ( IOException e ) {
-            e.printStackTrace();
-        } catch ( FeedException e ) {
+        } catch ( IOException | FeedException e ) {
             e.printStackTrace();
         }
     }

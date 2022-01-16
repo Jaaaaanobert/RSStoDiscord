@@ -10,12 +10,9 @@ import com.sun.syndication.io.XmlReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class ReadRSSFeed {
-
-    private final SyndFeed feed;
 
     public List getFeedEntrys() {
         return feedEntrys;
@@ -24,14 +21,14 @@ public class ReadRSSFeed {
     private final List<SyndEntryImpl> feedEntrys;
 
     public ReadRSSFeed( String feedURL ) throws IOException, FeedException {
-        feed = new SyndFeedInput().build( new XmlReader( new URL( feedURL ) ) );
+        SyndFeed feed = new SyndFeedInput().build( new XmlReader( new URL( feedURL ) ) );
         this.feedEntrys = feed.getEntries();
     }
 
     public List<String> getGUID() {
         ArrayList<String> guid = new ArrayList<>();
-        for ( Object o : feedEntrys ) {
-            guid.add( ( ( SyndEntryImpl ) o ).getUri() );
+        for ( SyndEntryImpl o : feedEntrys ) {
+            guid.add( o.getUri() );
         }
         return guid;
     }
