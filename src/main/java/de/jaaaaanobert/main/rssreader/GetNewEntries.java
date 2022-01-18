@@ -12,7 +12,7 @@ import java.util.List;
 
 public class GetNewEntries {
 
-    public void sync( String instanceName, String feedURL, ArrayList<String> guidList ) {
+    public void sync( String instanceName, String feedURL, String discordURL,  ArrayList<String> guidList ) {
 
         try {
             ReadRSSFeed feed = new ReadRSSFeed( feedURL );
@@ -26,9 +26,9 @@ public class GetNewEntries {
                     guidList.add( s.getUri() );
                     new WriteIndex().writeIndex( s.getUri(), instanceName );
                     if ( instanceName.equals( "Dortmund" ) && new RSSFilter().titleFilter( s.getTitle(), "Verkehr:" ) ) {
-                        new Webhook().sendPost( s, instanceName );
+                        new Webhook().sendPost( s, instanceName, discordURL );
                     } else if ( !instanceName.equals( "Dortmund" ) )
-                        new Webhook().sendPost( s, instanceName );
+                        new Webhook().sendPost( s, instanceName, discordURL );
 
                     System.out.println( s.getUri() + " is new!" );
                     newItems = true;
