@@ -28,7 +28,6 @@ public class main {
                 @Override
                 public void run() {
 
-
                     for ( RSSInstance o : instances ) {
 
                         System.out.println( "Instance created: " + o.getInstanceName() );
