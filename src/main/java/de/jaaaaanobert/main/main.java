@@ -14,34 +14,30 @@ public class main {
 
         try {
 
-            List<RSSInstance> instances = ConfigFileReader.getInstance().getConfig();
+            ConfigFileReader cfr = ConfigFileReader.getInstance();
+
+            List<RSSInstance> instances = cfr.getConfig();
 
             HashMap<String, ArrayList<String>> index = new HashMap<>();
 
             for ( RSSInstance o : instances )
                 index.put( o.getInstanceName(), new ReadIndex().readFile( o.getInstanceName() ) );
 
-            //ArrayList<String> localDortmund = new ReadIndex().readFile( "Dortmund" );
-            //ArrayList<String> localGelsenkirchen = new ReadIndex().readFile( "Gelsenkirchen" );
-
             Timer timer = new Timer();
             timer.schedule( new TimerTask() {
                 @Override
                 public void run() {
 
-                    System.out.println();
 
                     for ( RSSInstance o : instances ) {
 
-                        System.out.println( "Instance created: " + o.getInstanceName() + " " + o.getInstanceFeedURL() +
-                                " " + o.getInstanceDiscordURL() + " " +
-                                index.get( o.getInstanceName() ) );
+                        System.out.println( "Instance created: " + o.getInstanceName() );
 
                         new GetNewEntries().sync( o.getInstanceName(), o.getInstanceFeedURL(), o.getInstanceDiscordURL(),
                                 index.get( o.getInstanceName() ) );
                     }
                 }
-            }, 0, 1000 * 60 * 60 );
+            }, 0, 1000L * 60 * cfr.getInterval() );
 
 
         } catch ( IOException e ) {

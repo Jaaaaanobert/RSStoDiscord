@@ -8,9 +8,14 @@ import java.util.Properties;
 public class ConfigFileReader {
 
     private int instanceCount = 1;
+    private int interval = 20;
     private ArrayList<String> instanceName = new ArrayList<>();
     private ArrayList<String> feedURL = new ArrayList<>();
     private ArrayList<String> discordURL = new ArrayList<>();
+
+    public int getInterval() {
+        return interval;
+    }
 
     private ConfigFileReader() {
         Properties config = new Properties();
@@ -20,6 +25,7 @@ public class ConfigFileReader {
             try {
                 config.load( new BufferedInputStream( new FileInputStream( "config.properties" ) ) );
                 instanceCount = Integer.parseInt( config.getProperty( "instances" ) );
+                interval = Integer.parseInt( config.getProperty( "interval" ) );
 
                 for ( int i = 1; instanceCount >= i; i++ ) {
                     instanceName.add( i - 1, config.getProperty( "instancename" + i ) );
@@ -39,7 +45,7 @@ public class ConfigFileReader {
 
     private static final ConfigFileReader configFileReader = new ConfigFileReader();
 
-    public static final ConfigFileReader getInstance() {
+    public static ConfigFileReader getInstance() {
         return configFileReader;
     }
 
@@ -66,6 +72,7 @@ public class ConfigFileReader {
             properties.setProperty( "instancename1", "" );
             properties.setProperty( "feedurl1", "" );
             properties.setProperty( "discordurl1", "" );
+            properties.setProperty( "interval", "20" );
 
             properties.store( new FileOutputStream( file ), null );
 
