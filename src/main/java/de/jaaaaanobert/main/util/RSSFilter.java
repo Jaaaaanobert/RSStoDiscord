@@ -1,4 +1,4 @@
-package de.jaaaaanobert.main.filter;
+package de.jaaaaanobert.main.util;
 
 public class RSSFilter {
 

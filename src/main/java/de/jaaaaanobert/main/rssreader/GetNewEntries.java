@@ -2,7 +2,7 @@ package de.jaaaaanobert.main.rssreader;
 
 import com.sun.syndication.feed.synd.SyndEntryImpl;
 import com.sun.syndication.io.FeedException;
-import de.jaaaaanobert.main.filter.RSSFilter;
+import de.jaaaaanobert.main.util.RSSFilter;
 import de.jaaaaanobert.main.http.Webhook;
 import de.jaaaaanobert.main.index.WriteIndex;
 
