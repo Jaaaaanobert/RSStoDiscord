@@ -3,23 +3,22 @@ package de.jaaaaanobert.main.config;
 import de.jaaaaanobert.main.util.TimeTools;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Properties;
 
 public class ConfigFileReader {
 
-    private int instanceCount = 1;
     private int interval = 20;
-    //private ArrayList<String> instanceName = new ArrayList<>();
-    //private ArrayList<String> feedURL = new ArrayList<>();
-    //private ArrayList<String> discordURL = new ArrayList<>();
+    private long latestSyncTime;
 
-    private HashMap<String, RSSInstance> config = new HashMap<>();
-
+    private ArrayList<RSSInstance> config = new ArrayList<>();
     public int getInterval() {
         return interval;
+    }
+    public long getLatestSyncTime() {
+        return latestSyncTime;
     }
 
     private ConfigFileReader() {
@@ -27,22 +26,23 @@ public class ConfigFileReader {
 
         if ( configCreated() ) {
             try {
-                configprop.load( new BufferedInputStream( new FileInputStream( "config.properties" ) ) );
-                instanceCount = Integer.parseInt( configprop.getProperty( "instances" ) );
+                BufferedInputStream bf = new BufferedInputStream( Files.newInputStream( Paths.get( "config.properties" ) ) );
+                configprop.load( bf );
+                int instanceCount = Integer.parseInt( configprop.getProperty( "instances" ) );
                 interval = Integer.parseInt( configprop.getProperty( "interval" ) );
+                latestSyncTime = Long.parseLong( configprop.getProperty( "sync" ) );
 
                 for ( int i = 1; instanceCount >= i; i++ ) {
-                    //instanceName.add( i - 1, configprop.getProperty( "instancename" + i ) );
-                    //feedURL.add( i - 1, configprop.getProperty( "feedurl" + i ) );
-                    //discordURL.add( i - 1, configprop.getProperty( "discordurl" + i ) );
 
-                    config.put( configprop.getProperty( "instancename" + i ), new RSSInstance(
-                            configprop.getProperty( "instancename" + i ),
-                            configprop.getProperty( "feedurl" + i ),
-                            configprop.getProperty( "discordurl" + i )
+                    config.add( new RSSInstance(
+                            configprop.getProperty( "instancename-" + i ),
+                            configprop.getProperty( "feedurl-" + i ),
+                            configprop.getProperty( "discordurl-" + i )
                     ) );
 
                 }
+
+                bf.close();
 
             } catch ( Exception e ) {
                 e.printStackTrace();
@@ -60,7 +60,7 @@ public class ConfigFileReader {
         return configFileReader;
     }
 
-    public HashMap<String, RSSInstance> getConfig() {
+    public ArrayList<RSSInstance> getConfig() {
         return config;
     }
 
@@ -75,13 +75,13 @@ public class ConfigFileReader {
             Properties properties = new Properties();
 
             properties.setProperty( "instances", "1" );
-            properties.setProperty( "instancename1", "" );
-            properties.setProperty( "feedurl1", "" );
-            properties.setProperty( "discordurl1", "" );
-            properties.setProperty( "timestamp", String.valueOf( new TimeTools().getTimeUnix() ) );
+            properties.setProperty( "instancename-1", "" );
+            properties.setProperty( "feedurl-1", "" );
+            properties.setProperty( "discordurl-1", "" );
+            properties.setProperty( "sync", String.valueOf( new TimeTools().getUnixTime() ) );
             properties.setProperty( "interval", "20" );
 
-            properties.store( new FileOutputStream( file ), null );
+            properties.store( Files.newOutputStream( file.toPath() ), null );
 
         } catch ( IOException e ) {
             e.printStackTrace();
